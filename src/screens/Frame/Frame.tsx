@@ -11,17 +11,30 @@ import Lottie from "lottie-react";
 import animationData from '../../assets/animation/star.json';
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronUp } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Frame = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const totalSteps = questions.length;
   const birthChartRef = useRef<HTMLDivElement>(null);
   const progressCardRef = useRef<HTMLDivElement>(null);
   const blogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Handle scroll button visibility
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollButton(true);
+      } else {
+        setShowScrollButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
     // Create animations for each section
     const createAnimation = (element: HTMLDivElement | null) => {
       if (!element) return;
@@ -67,6 +80,7 @@ export const Frame = (): JSX.Element => {
       blogAnimation?.kill();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -74,6 +88,13 @@ export const Frame = (): JSX.Element => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   return (
@@ -165,6 +186,15 @@ export const Frame = (): JSX.Element => {
           </div>
 
           <Footer />
+
+          {/* Scroll to Top Button */}
+          <button
+            onClick={scrollToTop}
+            className={`fixed bottom-8 right-8 w-12 h-12 bg-[#4268a5] rounded-full flex items-center justify-center text-white shadow-lg hover:bg-[#355694] transition-all duration-300 hover:scale-110 z-50 ${showScrollButton ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+              }`}
+          >
+            <ChevronUp className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </div>
