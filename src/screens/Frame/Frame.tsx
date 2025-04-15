@@ -3,6 +3,8 @@ import { Header } from "../../components/Header/Header";
 import { Footer } from "../../components/Footer/Footer";
 import { HeroSection } from "../../components/HeroSection/HeroSection";
 import { ProgressCard } from "../../components/ProgressCard/ProgressCard";
+
+import { Button } from "../../components/ui/button";
 import { BlogSection } from "../../components/BlogSection/BlogSection";
 import { questions } from "./questions";
 
@@ -17,7 +19,7 @@ export const Frame = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col items-start bg-[#502b92] border-2 border-solid border-[#ced4da]">
+    <div className="flex flex-col items-start bg-[#502b92]">
       <div className="relative w-full">
         <div className="relative bg-[#0d0d1f]">
           <Header />
@@ -25,7 +27,7 @@ export const Frame = (): JSX.Element => {
 
           {/* Birth Chart Section */}
           <section className="w-full bg-[#161630] py-20">
-            <div className="relative w-full max-w-[1280px] mx-auto px-4">
+            <div className="relative w-5/6 mx-auto">
               <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
                 <div className="w-full max-w-[600px]">
                   <h2 className="text-4xl font-normal text-white leading-9 [font-family:'Montserrat',Helvetica]">
@@ -46,11 +48,14 @@ export const Frame = (): JSX.Element => {
                     self-discovery, helping you uncover your strengths and
                     navigate the possibilities ahead.
                   </p>
+                  <Button className="mt-8 sm:mt-10 md:mt-12 w-full sm:w-auto px-8 py-8 bg-[#4268a5] rounded-full text-base sm:text-lg [font-family:'Montserrat',Helvetica] hover:bg-[#355694] transition-colors">
+                    Generate Your Birth Chart
+                  </Button>
                 </div>
 
                 <div className="w-full max-w-[600px]">
                   <img
-                    className="w-full max-w-[612px] h-auto object-cover"
+                    className="w-full max-w-[612px] h-auto object-cover rounded-[2rem]"
                     alt="Birth chart"
                     src="/birth-chart-1.png"
                   />
@@ -60,7 +65,7 @@ export const Frame = (): JSX.Element => {
           </section>
 
           {/* Progress Card Section */}
-          <section className="w-full py-10">
+          <section className="w-full py-10 bg-[url(/main-1.png)] bg-cover bg-center">
             <ProgressCard
               currentStep={currentStep}
               totalSteps={totalSteps}

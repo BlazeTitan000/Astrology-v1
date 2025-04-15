@@ -1,77 +1,311 @@
-import React from 'react';
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
+
+import React, { useState } from "react";
+import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { Progress } from "../ui/progress";
+import { Label } from "../ui/label";
+import { ArrowRight, ArrowLeft, User, Calendar, MapPin, Mail, Clock } from "lucide-react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "../ui/select";
 
-interface Question {
-  title: string;
-  description: string;
-  placeholder: string;
-  type?: string;
-  options?: string[];
-  image?: string;
-}
+export const ProgressCard: React.FC = () => {
+    const [currentStep, setCurrentStep] = useState(1);
+    const [name, setName] = useState("");
+    const [birthMonth, setBirthMonth] = useState("");
+    const [birthDay, setBirthDay] = useState("");
+    const [birthYear, setBirthYear] = useState("");
+    const [birthTime, setBirthTime] = useState("");
+    const [exactTimeUnknown, setExactTimeUnknown] = useState(false);
+    const [birthplace, setBirthplace] = useState("");
+    const [email, setEmail] = useState("");
 
-interface ProgressCardProps {
-  currentStep: number;
-  totalSteps: number;
-  question: Question;
-  onNext: () => void;
-}
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+    };
 
-export const ProgressCard = ({ currentStep, totalSteps, question, onNext }: ProgressCardProps) => {
-  const progress = ((currentStep + 1) / totalSteps) * 100;
+    const handleNext = () => {
+        if (currentStep < 3) {
+            setCurrentStep(currentStep + 1);
+        } else {
+            // Handle form submission
+            console.log("Form submitted:", {
+                name,
+                birthDate: `${birthMonth}/${birthDay}/${birthYear}`,
+                birthTime: exactTimeUnknown ? "unknown" : birthTime,
+                birthplace,
+                email,
+            });
+        }
+    };
 
-  return (
-    <div className="max-w-[561px] mx-auto">
-      <Progress value={progress} className="mb-4" />
+    const handlePrevious = () => {
+        if (currentStep > 1) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
 
-      <Card className="w-full rounded-[28px] bg-white shadow-lg overflow-hidden">
-        <CardContent className="p-8">
-          {question.image && (
-            <div className="mb-6">
-              <img src={question.image} alt="" className="w-full h-48 object-cover rounded-lg" />
+    const getProgressValue = () => {
+        return (currentStep / 3) * 100;
+    };
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+    const years = Array.from({ length: 100 }, (_, i) => (2025 - i).toString());
+    const hours = Array.from({ length: 24 }, (_, i) => (i < 10 ? `0${i}` : i.toString()));
+    const minutes = Array.from({ length: 60 }, (_, i) => (i < 10 ? `0${i}` : i.toString()));
+
+    return (
+        <div className="bg-[rgba(0,0,0,0)] z-10 flex mt-[-34px] w-5/6 mx-auto flex-col items-center pt-[39px] max-md:max-w-full">
+            {/* Progress bar */}
+            <div className="flex w-[561px] max-w-full flex-col gap-1">
+                <div className="flex justify-between text-white text-xs mb-1">
+                    <span className="font-semibold">Step {currentStep}</span>
+                    <span>Step {currentStep} of 3</span>
+                </div>
+                <Progress value={getProgressValue()} className="h-1 bg-[#E8DEF8]" />
             </div>
-          )}
 
-          <div className="flex flex-col gap-4">
-            <h3 className="text-2xl font-semibold text-gray-900">
-              {question.title}
-            </h3>
+            <div className="bg-[rgba(28,28,58,1)] min-w-[280px] mt-8 min-h-[550px] w-[560px] max-w-full overflow-hidden text-white font-normal rounded-[28px] max-md:mt-5">
+                <div className="w-full p-6 max-md:max-w-full max-md:px-5">
+                    {/* Step 1: Name Input */}
+                    {currentStep === 1 && (
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                    How shall we address you?
+                                </h2>
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                    Tell us your name or nickname, it's an essential part of
+                                    personalizing your reading
+                                </p>
+                            </div>
+                            <div className="flex justify-center pt-4">
+                                <img
+                                    src="/date.svg"
+                                    alt="Birth time illustration"
+                                    className="h-20 object-contain"
+                                />
+                            </div>
+                            <div className="pt-2 relative">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <User size={20} />
+                                </div>
+                                <Input
+                                    type="text"
+                                    value={name}
+                                    onChange={handleNameChange}
+                                    placeholder="Enter your name"
+                                    className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                    aria-label="Your name"
+                                />
+                            </div>
 
-            <p className="text-gray-600 text-sm">
-              {question.description}
-            </p>
-          </div>
+                            
+                        </div>
+                    )}
 
-          <div className="mt-8">
-            {question.type === 'select' && question.options ? (
-              <select className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-                <option value="" disabled selected>Select an option</option>
-                {question.options.map((option, index) => (
-                  <option key={index} value={option}>{option}</option>
-                ))}
-              </select>
-            ) : (
-              <Input
-                className="w-full p-3 border border-gray-300 rounded-lg text-gray-700 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder={question.placeholder}
-                type={question.type || 'text'}
-              />
-            )}
-          </div>
+                    {/* Step 2: Birth Date */}
+                    {currentStep === 2 && (
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                    Your birth date
+                                </h2>
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                    Your birthdate helps us determine your current stage in life and what
+                                    the near future has in store for you
+                                </p>
+                            </div>
+                            <div className="flex justify-center pt-4">
+                                <img
+                                    src="/timebirthday.svg"
+                                    alt="Birth time illustration"
+                                    className="h-20 object-contain"
+                                />
+                            </div>
+                            <div className="flex items-center gap-2 pt-2">
+                                <div className="flex-shrink-0 text-gray-400">
+                                    <Calendar size={20} />
+                                </div>
+                                <div className="flex gap-2 w-full">
+                                    <div className="w-full">
+                                        <Select value={birthMonth} onValueChange={setBirthMonth}>
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                                <SelectValue placeholder="Month" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
+                                                {months.map((month, index) => (
+                                                    <SelectItem key={index} value={(index + 1).toString()}>
+                                                        {month}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
 
-          <div className="mt-8">
-            <Button 
-              className="w-full py-4 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium text-lg transition-colors"
-              onClick={onNext}
-            >
-              Next
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+                                    <div className="w-1/4">
+                                        <Select value={birthDay} onValueChange={setBirthDay}>
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                                <SelectValue placeholder="Day" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
+                                                {days.map((day) => (
+                                                    <SelectItem key={day} value={day}>{day}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    <div className="w-1/4">
+                                        <Select value={birthYear} onValueChange={setBirthYear}>
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                                <SelectValue placeholder="Year" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
+                                                {years.map((year) => (
+                                                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4 pt-2">
+                                <div className="flex items-center gap-2">
+                                    <Clock size={20} className="text-gray-400" />
+                                    <Label htmlFor="birth-time" className="text-sm text-gray-300">Birth Time</Label>
+                                </div>
+
+                                <div className="flex gap-2 pl-7">
+                                    <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
+                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                            <SelectValue placeholder="00" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
+                                            {hours.map((hour) => (
+                                                <SelectItem key={hour} value={hour}>{hour} </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
+                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                            <SelectValue placeholder="00 min" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
+                                            {minutes.map((min) => (
+                                                <SelectItem key={min} value={min}>{min} min</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                <div className="flex items-center space-x-2 pl-7">
+                                    <Checkbox
+                                        id="exact-time-unknown"
+                                        checked={exactTimeUnknown}
+                                        onCheckedChange={(checked) => {
+                                            setExactTimeUnknown(checked === true);
+                                            if (checked) setBirthTime("");
+                                        }}
+                                    />
+                                    <Label
+                                        htmlFor="exact-time-unknown"
+                                        className="text-sm text-gray-300"
+                                    >
+                                        I don't know the exact time
+                                    </Label>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Step 3: Birth Place */}
+                    {currentStep === 3 && (
+                        <div className="space-y-6">
+                            <div className="space-y-2">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                    Your place of birth
+                                </h2>
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                    Knowing your exact birthplace will allow us recreate your unique
+                                    astrological blueprint
+                                </p>
+                            </div>
+                            <div className="flex justify-center pt-4">
+                                <img
+                                    src="/placebirthday.svg"
+                                    alt="Birth place illustration"
+                                    className="h-24 object-contain"
+                                />
+                            </div>
+                            <div className="pt-2 space-y-4">
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <MapPin size={20} />
+                                    </div>
+                                    <Input
+                                        type="text"
+                                        value={birthplace}
+                                        onChange={(e) => setBirthplace(e.target.value)}
+                                        placeholder="City, Country"
+                                        className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                        aria-label="Your birthplace"
+                                    />
+                                </div>
+
+                                <div className="relative">
+                                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                        <Mail size={20} />
+                                    </div>
+                                    <Input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        placeholder="Email address"
+                                        className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                        aria-label="Your email"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    <div className="flex justify-center items-center gap-4 mt-6">
+                        {currentStep > 1 && (
+                            <Button
+                                onClick={handlePrevious}
+                                variant="outline"
+                                className="bg-[rgba(40,40,70,0.5)] text-white border-none hover:bg-[rgba(40,40,70,0.7)] px-4 rounded-full "
+                            >
+                                <ArrowLeft size={16} className="mr-1" />
+                                Back
+                            </Button>
+                        )}
+
+                        <Button
+                            onClick={handleNext}
+                            className={currentStep === 3 ? "bg-[#426CCCFA] rounded-full" : "bg-[#65558F] rounded-full"}
+                        >
+                            {currentStep === 3 ? "GENERATE" : "NEXT"}
+                            {currentStep !== 3 && <ArrowRight size={16} className="ml-1" />}
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
+           
+        </div>
+    );
 };

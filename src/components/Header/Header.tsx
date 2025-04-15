@@ -1,14 +1,14 @@
 import React from 'react';
-import { MoreHorizontalIcon } from "lucide-react";
+import { MoreHorizontalIcon } from 'lucide-react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 export const Header = () => {
   return (
-    <header className="absolute w-full h-[100px] top-0 left-0 bg-[#0d0d1fe6] z-50">
-      <div className="relative w-full max-w-[1280px] h-10 top-4 px-4">
-        <div className="absolute h-8 top-1 left-4">
+    <header className="fixed w-full h-[100px] top-0 left-0 bg-[#0d0d1fe6] z-50">
+      <div className="flex items-center justify-between h-full w-5/6 mx-auto">
+        <div className="flex items-center">
           <img
-            className="w-[58px] h-[54px] -top-[11px] object-cover"
+            className="w-[70px] h-[70px] object-cover"
             alt="Logo"
             src="/logo-1.png"
           />
@@ -16,28 +16,26 @@ export const Header = () => {
 
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button className="absolute top-0 right-4 p-2 rounded-full hover:bg-white/10 transition-colors">
+            <button className="p-2 rounded-full hover:bg-white/10 transition-colors">
               <MoreHorizontalIcon className="w-8 h-8 text-white" />
             </button>
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="min-w-[220px] bg-white rounded-lg p-2 shadow-xl animate-in fade-in-80 z-50"
-              sideOffset={5}
+              className="bg-[#1C1C3A] bg-opacity-80 rounded-lg p-2 shadow-xl translate-y-8 animate-in fade-in-80 z-50"
             >
-              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:bg-purple-50 rounded-md text-gray-700">
-                About Us
+              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white">
+                Terms & Conditions
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:bg-purple-50 rounded-md text-gray-700">
-                Services
+              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white">
+                Blog
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:bg-purple-50 rounded-md text-gray-700">
-                Contact
+              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white">
+                Example Report
               </DropdownMenu.Item>
-              <DropdownMenu.Separator className="h-px bg-gray-200 my-2" />
-              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:bg-purple-50 rounded-md text-purple-600 font-medium">
-                Sign In
+              <DropdownMenu.Item className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white font-medium">
+                How to work
               </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
