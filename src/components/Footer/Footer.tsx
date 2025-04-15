@@ -10,7 +10,7 @@ export const Footer = () => {
         <div className="relative border-t border-gray-800">
           <div className='lg:w-1/2 lg:translate-x-full w-full'>
             <div className="flex items-center justify-between py-8 ">
-              <p className="text-base font-normal  text-gray-400 text-center leading-4 [font-family:'Montserrat',Helvetica]">
+              <p className="text-base font-normal lg:-translate-x-1/2 w-full text-gray-400 text-center leading-4 font-libre-bodoni">
                 © 2025 AstroAI. All rights reserved.
               </p>
               <div className="flex-1" />

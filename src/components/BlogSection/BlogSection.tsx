@@ -30,13 +30,13 @@ const blogPosts = [
 
 export const BlogSection = () => {
   return (
-    <section className="w-full bg-[#161630] py-20">
+    <section className="w-full bg-[#161630] py-20" id="blog-section">
       <div className="w-5/6 mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-normal text-white leading-9 [font-family:'Montserrat',Helvetica] mb-4">
+          <h2 className="lg:text-4xl text-2xl font-normal text-white leading-9 font-libre-bodoni mb-4">
             Latest from Our Blog
           </h2>
-          <p className="text-gray-400 text-lg [font-family:'Montserrat',Helvetica]">
+          <p className="text-gray-400 text-lg font-libre-bodoni">
             Explore the latest insights from the world of astrology
           </p>
         </div>
@@ -56,13 +56,13 @@ export const BlogSection = () => {
               </div>
               <CardContent className="p-6">
                 <div className="text-gray-400 text-sm mb-2">{post.date}</div>
-                <h3 className="text-xl font-normal text-white leading-tight [font-family:'Montserrat',Helvetica] mb-4">
+                <h3 className="text-xl font-normal text-white leading-tight font-libre-bodoni mb-4">
                   {post.title}
                 </h3>
-                <p className="text-gray-300 text-sm mb-4">
+                <p className="text-gray-300 text-sm mb-4 font-playfair">
                   {post.description}
                 </p>
-                <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-2">
+                <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-2 font-playfair">
                   Read More
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M5 12h14M12 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

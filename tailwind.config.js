@@ -62,6 +62,8 @@ module.exports = {
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
         ],
+        'libre-bodoni': ['Libre_Bodoni', 'serif'],
+        'playfair-display': ['Playfair_Display', 'serif'],
       },
       borderRadius: {
         lg: "var(--radius)",

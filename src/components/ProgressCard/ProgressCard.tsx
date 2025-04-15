@@ -66,25 +66,23 @@ export const ProgressCard: React.FC = () => {
 
     return (
         <div className="bg-[rgba(0,0,0,0)] z-10 flex mt-[-34px] w-5/6 mx-auto flex-col items-center pt-[39px] max-md:max-w-full">
-            {/* Progress bar */}
-            <div className="flex w-[561px] max-w-full flex-col gap-1">
-                <div className="flex justify-between text-white text-xs mb-1">
-                    <span className="font-semibold">Step {currentStep}</span>
-                    <span>Step {currentStep} of 3</span>
-                </div>
-                <Progress value={getProgressValue()} className="h-1 bg-[#E8DEF8]" />
-            </div>
-
-            <div className="bg-[rgba(28,28,58,1)] min-w-[280px] mt-8 min-h-[550px] w-[560px] max-w-full overflow-hidden text-white font-normal rounded-[28px] max-md:mt-5">
-                <div className="w-full p-6 max-md:max-w-full max-md:px-5">
+            <div className="bg-[rgba(28,28,58,0.9)] min-w-[280px] mt-8 min-h-[550px] w-[560px] max-w-full overflow-hidden text-white font-normal rounded-[28px] max-md:mt-5 flex flex-col">
+                <div className="flex-1 overflow-y-auto p-6 max-md:max-w-full max-md:px-5">
+                    <div className="flex w-[561px] max-w-full flex-col gap-1">
+                        <div className="flex justify-between text-white text-xs mb-1">
+                            <span className="font-semibold">Step {currentStep}</span>
+                            <span>Step {currentStep} of 3</span>
+                        </div>
+                        <Progress value={getProgressValue()} className="h-2 bg-[#E8DEF8]" />
+                    </div>
                     {/* Step 1: Name Input */}
                     {currentStep === 1 && (
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
                                     How shall we address you?
                                 </h2>
-                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
                                     Tell us your name or nickname, it's an essential part of
                                     personalizing your reading
                                 </p>
@@ -97,7 +95,7 @@ export const ProgressCard: React.FC = () => {
                                 />
                             </div>
                             <div className="pt-2 relative">
-                                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/3 text-gray-400">
                                     <User size={20} />
                                 </div>
                                 <Input
@@ -105,12 +103,12 @@ export const ProgressCard: React.FC = () => {
                                     value={name}
                                     onChange={handleNameChange}
                                     placeholder="Enter your name"
-                                    className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                    className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)] font-playfair"
                                     aria-label="Your name"
                                 />
                             </div>
 
-                            
+
                         </div>
                     )}
 
@@ -118,10 +116,10 @@ export const ProgressCard: React.FC = () => {
                     {currentStep === 2 && (
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
                                     Your birth date
                                 </h2>
-                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
                                     Your birthdate helps us determine your current stage in life and what
                                     the near future has in store for you
                                 </p>
@@ -134,13 +132,10 @@ export const ProgressCard: React.FC = () => {
                                 />
                             </div>
                             <div className="flex items-center gap-2 pt-2">
-                                <div className="flex-shrink-0 text-gray-400">
-                                    <Calendar size={20} />
-                                </div>
                                 <div className="flex gap-2 w-full">
                                     <div className="w-full">
                                         <Select value={birthMonth} onValueChange={setBirthMonth}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white ">
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -155,7 +150,7 @@ export const ProgressCard: React.FC = () => {
 
                                     <div className="w-1/4">
                                         <Select value={birthDay} onValueChange={setBirthDay}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
                                                 <SelectValue placeholder="Day" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -168,7 +163,7 @@ export const ProgressCard: React.FC = () => {
 
                                     <div className="w-1/4">
                                         <Select value={birthYear} onValueChange={setBirthYear}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -182,14 +177,9 @@ export const ProgressCard: React.FC = () => {
                             </div>
 
                             <div className="space-y-4 pt-2">
-                                <div className="flex items-center gap-2">
-                                    <Clock size={20} className="text-gray-400" />
-                                    <Label htmlFor="birth-time" className="text-sm text-gray-300">Birth Time</Label>
-                                </div>
-
-                                <div className="flex gap-2 pl-7">
+                                <div className="flex gap-2">
                                     <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
-                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
                                             <SelectValue placeholder="00" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -199,7 +189,7 @@ export const ProgressCard: React.FC = () => {
                                         </SelectContent>
                                     </Select>
                                     <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
-                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border-none text-white">
+                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
                                             <SelectValue placeholder="00 min" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -214,6 +204,7 @@ export const ProgressCard: React.FC = () => {
                                     <Checkbox
                                         id="exact-time-unknown"
                                         checked={exactTimeUnknown}
+                                        className="border-gray-100"
                                         onCheckedChange={(checked) => {
                                             setExactTimeUnknown(checked === true);
                                             if (checked) setBirthTime("");
@@ -227,7 +218,7 @@ export const ProgressCard: React.FC = () => {
                                     </Label>
                                 </div>
 
-                                
+
                             </div>
                         </div>
                     )}
@@ -236,10 +227,10 @@ export const ProgressCard: React.FC = () => {
                     {currentStep === 3 && (
                         <div className="space-y-6">
                             <div className="space-y-2">
-                                <h2 className="text-2xl font-medium leading-8 tracking-[0px]">
+                                <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
                                     Your place of birth
                                 </h2>
-                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300">
+                                <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
                                     Knowing your exact birthplace will allow us recreate your unique
                                     astrological blueprint
                                 </p>
@@ -261,7 +252,7 @@ export const ProgressCard: React.FC = () => {
                                         value={birthplace}
                                         onChange={(e) => setBirthplace(e.target.value)}
                                         placeholder="City, Country"
-                                        className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                        className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)] "
                                         aria-label="Your birthplace"
                                     />
                                 </div>
@@ -275,19 +266,23 @@ export const ProgressCard: React.FC = () => {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="Email address"
-                                        className="bg-[rgba(40,40,70,1)] border-none text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                        className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
                                         aria-label="Your email"
                                     />
                                 </div>
                             </div>
                         </div>
                     )}
+
+                </div>
+                <div className="p-6 pt-0 border-t border-[rgba(255,255,255,0.1)]">
+
                     <div className="flex justify-center items-center gap-4 mt-6">
                         {currentStep > 1 && (
                             <Button
                                 onClick={handlePrevious}
                                 variant="outline"
-                                className="bg-[rgba(40,40,70,0.5)] text-white border-none hover:bg-[rgba(40,40,70,0.7)] px-4 rounded-full "
+                                className="bg-[rgba(40,40,70,0.5)] text-white border-none hover:bg-[rgba(40,40,70,0.7)] hover:text-purple-400 px-4 rounded-full font-playfair"
                             >
                                 <ArrowLeft size={16} className="mr-1" />
                                 Back
@@ -296,7 +291,7 @@ export const ProgressCard: React.FC = () => {
 
                         <Button
                             onClick={handleNext}
-                            className={currentStep === 3 ? "bg-[#426CCCFA] rounded-full" : "bg-[#65558F] rounded-full"}
+                            className={currentStep === 3 ? "bg-[#426CCCFA] rounded-full font-playfair" : "bg-[#65558F] rounded-full font-playfair"}
                         >
                             {currentStep === 3 ? "GENERATE" : "NEXT"}
                             {currentStep !== 3 && <ArrowRight size={16} className="ml-1" />}
@@ -305,7 +300,7 @@ export const ProgressCard: React.FC = () => {
                 </div>
             </div>
 
-           
+
         </div>
     );
 };

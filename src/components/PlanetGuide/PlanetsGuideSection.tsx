@@ -34,9 +34,9 @@ const PlanetsGuideSection: React.FC = () => {
     ];
 
     return (
-        <div className="bg-[rgba(0,0,0,0)]  w-5/6 mx-auto">
+        <div className="bg-[rgba(0,0,0,0)]  w-5/6 mx-auto " id="how-to-work">
             <div className="bg-[rgba(0,0,0,0)] flex w-full flex-col items-stretch pb-[15px] w-5/6 mx-auto">
-                <h2 className="text-white text-4xl font-normal leading-none text-center self-center">
+                <h2 className="text-white lg:text-4xl text-2xl font-normal leading-none text-center self-center font-libre-bodoni">
                     Planets & Signs Guide
                 </h2>
 
