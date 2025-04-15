@@ -22,6 +22,7 @@ export const Frame = (): JSX.Element => {
   const birthChartRef = useRef<HTMLDivElement>(null);
   const progressCardRef = useRef<HTMLDivElement>(null);
   const blogRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     // Handle scroll button visibility
@@ -34,6 +35,42 @@ export const Frame = (): JSX.Element => {
     };
 
     window.addEventListener('scroll', handleScroll);
+
+    // Create floating animation for the image
+    const createFloatingAnimation = () => {
+      if (!imageRef.current) return;
+
+      // Set initial 3D transform
+      gsap.set(imageRef.current, {
+        transformPerspective: 1000,
+        transformStyle: "preserve-3d"
+      });
+
+      // Create the floating animation
+      const timeline = gsap.timeline({
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+
+      timeline
+        .to(imageRef.current, {
+          y: -20,
+          rotateX: 5,
+          rotateY: 5,
+          duration: 3,
+          ease: "sine.inOut"
+        })
+        .to(imageRef.current, {
+          y: 0,
+          rotateX: -5,
+          rotateY: -5,
+          duration: 3,
+          ease: "sine.inOut"
+        });
+
+      return timeline;
+    };
 
     // Create animations for each section
     const createAnimation = (element: HTMLDivElement | null) => {
@@ -65,6 +102,7 @@ export const Frame = (): JSX.Element => {
     const birthChartAnimation = createAnimation(birthChartRef.current);
     const progressCardAnimation = createAnimation(progressCardRef.current);
     const blogAnimation = createAnimation(blogRef.current);
+    const floatingAnimation = createFloatingAnimation();
 
     // Handle window resize
     const handleResize = () => {
@@ -78,6 +116,7 @@ export const Frame = (): JSX.Element => {
       birthChartAnimation?.kill();
       progressCardAnimation?.kill();
       blogAnimation?.kill();
+      floatingAnimation?.kill();
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('scroll', handleScroll);
@@ -124,6 +163,7 @@ export const Frame = (): JSX.Element => {
 
                   <div className="md:hidden w-full mt-6">
                     <img
+                      ref={imageRef}
                       className="w-full max-w-[612px] h-auto object-cover rounded-[2rem]"
                       alt="Birth chart"
                       src="/birth-chart-1.png"
@@ -157,6 +197,7 @@ export const Frame = (): JSX.Element => {
 
                 <div className="w-full max-w-[600px] order-1 md:order-2 hidden md:block">
                   <img
+                    ref={imageRef}
                     className="w-full max-w-[612px] h-auto object-cover rounded-[2rem]"
                     alt="Birth chart"
                     src="/birth-chart-1.png"
