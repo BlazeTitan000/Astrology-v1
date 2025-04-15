@@ -11,25 +11,24 @@ export const useScrollAnimation = () => {
         const element = elementRef.current;
         if (!element) return;
 
-        // Set initial state
+        // Reset the element's state
         gsap.set(element, {
             opacity: 0,
             y: 100
         });
 
-        // Create animation
+        // Create the animation
         const animation = gsap.to(element, {
             opacity: 1,
             y: 0,
-            duration: 1.2,
-            ease: "power3.out",
+            duration: 1,
+            ease: "power2.out",
             scrollTrigger: {
                 trigger: element,
-                start: "top 85%",
-                end: "bottom 15%",
-                toggleActions: "play none none reverse",
-                markers: false, // Set to true for debugging
-                once: false
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play reset play reset",
+                markers: false
             }
         });
 
