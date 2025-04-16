@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, CardContent } from "../ui/card";
+import { useNavigate } from 'react-router-dom';
 
 const blogPosts = [
   {
@@ -29,6 +30,12 @@ const blogPosts = [
 ];
 
 export const BlogSection = () => {
+  const navigate = useNavigate();
+
+  const handleReadMore = (postId: number) => {
+    navigate(`/blog/${postId}`);
+  };
+
   return (
     <section className="w-full bg-[#161630] py-20" id="blog-section">
       <div className="w-5/6 mx-auto px-4">
@@ -62,12 +69,15 @@ export const BlogSection = () => {
                 <p className="text-gray-300 text-sm mb-4 font-playfair">
                   {post.description}
                 </p>
-                <a href="#" className="text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-2 font-playfair">
+                <button
+                  onClick={() => handleReadMore(post.id)}
+                  className="text-purple-400 hover:text-purple-300 transition-colors inline-flex items-center gap-2 font-playfair"
+                >
                   Read More
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M5 12h14M12 5l7 7-7 7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                </a>
+                </button>
               </CardContent>
             </Card>
           ))}

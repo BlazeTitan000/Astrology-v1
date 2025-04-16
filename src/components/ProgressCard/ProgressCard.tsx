@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
@@ -14,44 +13,105 @@ import {
     SelectValue,
 } from "../ui/select";
 
-export const ProgressCard: React.FC = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+interface Question {
+    title: string;
+    description: string;
+    placeholder: string;
+    type: string;
+    image: string;
+    options?: string[];
+}
+
+interface ProgressCardProps {
+    currentStep: number;
+    totalSteps: number;
+    question: Question;
+    onNext: (details: Partial<BirthDetails>) => void;
+    onPrevious: () => void;
+}
+
+interface BirthDetails {
+    name: string;
+    birthDate: string;
+    birthTime: string | null;
+    birthplace: string;
+    email: string;
+}
+
+export const ProgressCard: React.FC<ProgressCardProps> = ({ currentStep, totalSteps, question, onNext, onPrevious }) => {
     const [name, setName] = useState("");
     const [birthMonth, setBirthMonth] = useState("");
     const [birthDay, setBirthDay] = useState("");
     const [birthYear, setBirthYear] = useState("");
-    const [birthTime, setBirthTime] = useState("");
+    const [birthHour, setBirthHour] = useState("");
+    const [birthMinute, setBirthMinute] = useState("");
     const [exactTimeUnknown, setExactTimeUnknown] = useState(false);
     const [birthplace, setBirthplace] = useState("");
     const [email, setEmail] = useState("");
+    const [errors, setErrors] = useState<Record<string, string>>({});
+
+    const validateStep = (): boolean => {
+        const newErrors: Record<string, string> = {};
+
+        if (currentStep === 1) {
+            if (!name.trim()) {
+                newErrors.name = "Name is required";
+            }
+        } else if (currentStep === 2) {
+            if (!birthMonth || !birthDay || !birthYear) {
+                newErrors.birthDate = "Please select your complete birth date";
+            }
+            if (!exactTimeUnknown && (!birthHour || !birthMinute)) {
+                newErrors.birthTime = "Please select your birth time";
+            }
+        } else if (currentStep === 3) {
+            if (!birthplace.trim()) {
+                newErrors.birthplace = "Birthplace is required";
+            }
+            if (!email.trim()) {
+                newErrors.email = "Email is required";
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                newErrors.email = "Please enter a valid email address";
+            }
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
+        if (errors.name) {
+            setErrors(prev => ({ ...prev, name: "" }));
+        }
     };
 
     const handleNext = () => {
-        if (currentStep < 3) {
-            setCurrentStep(currentStep + 1);
-        } else {
-            // Handle form submission
-            console.log("Form submitted:", {
-                name,
-                birthDate: `${birthMonth}/${birthDay}/${birthYear}`,
-                birthTime: exactTimeUnknown ? "unknown" : birthTime,
-                birthplace,
-                email,
-            });
+        if (!validateStep()) {
+            return;
         }
+
+        const details: Partial<BirthDetails> = {};
+
+        if (currentStep === 1) {
+            details.name = name;
+        } else if (currentStep === 2) {
+            details.birthDate = `${birthYear}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`;
+            details.birthTime = exactTimeUnknown ? null : `${birthHour}:${birthMinute}`;
+        } else if (currentStep === 3) {
+            details.birthplace = birthplace;
+            details.email = email;
+        }
+
+        onNext(details);
     };
 
     const handlePrevious = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        }
+        onPrevious();
     };
 
     const getProgressValue = () => {
-        return (currentStep / 3) * 100;
+        return (currentStep / totalSteps) * 100;
     };
 
     const months = [
@@ -71,7 +131,7 @@ export const ProgressCard: React.FC = () => {
                     <div className="flex w-[561px] max-w-full flex-col gap-1">
                         <div className="flex justify-between text-white text-xs mb-1">
                             <span className="font-semibold">Step {currentStep}</span>
-                            <span>Step {currentStep} of 3</span>
+                            <span>Step {currentStep} of {totalSteps}</span>
                         </div>
                         <Progress value={getProgressValue()} className="h-2 bg-[#E8DEF8]" />
                     </div>
@@ -80,17 +140,16 @@ export const ProgressCard: React.FC = () => {
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
-                                    How shall we address you?
+                                    {question.title}
                                 </h2>
                                 <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
-                                    Tell us your name or nickname, it's an essential part of
-                                    personalizing your reading
+                                    {question.description}
                                 </p>
                             </div>
                             <div className="flex justify-center pt-4">
                                 <img
-                                    src="/date.svg"
-                                    alt="Birth time illustration"
+                                    src={question.image}
+                                    alt={`${question.title} illustration`}
                                     className="h-20 object-contain"
                                 />
                             </div>
@@ -102,13 +161,15 @@ export const ProgressCard: React.FC = () => {
                                     type="text"
                                     value={name}
                                     onChange={handleNameChange}
-                                    placeholder="Enter your name"
-                                    className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)] font-playfair"
+                                    placeholder={question.placeholder}
+                                    className={`bg-[rgba(40,40,70,1)] border ${errors.name ? 'border-red-500' : 'border-gray-700'} text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)] font-playfair`}
                                     aria-label="Your name"
                                 />
+
                             </div>
-
-
+                            {errors.name && (
+                                <p className="text-red-500 text-sm">{errors.name}</p>
+                            )}
                         </div>
                     )}
 
@@ -117,17 +178,16 @@ export const ProgressCard: React.FC = () => {
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
-                                    Your birth date
+                                    {question.title}
                                 </h2>
                                 <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
-                                    Your birthdate helps us determine your current stage in life and what
-                                    the near future has in store for you
+                                    {question.description}
                                 </p>
                             </div>
                             <div className="flex justify-center pt-4">
                                 <img
-                                    src="/timebirthday.svg"
-                                    alt="Birth time illustration"
+                                    src={question.image}
+                                    alt={`${question.title} illustration`}
                                     className="h-20 object-contain"
                                 />
                             </div>
@@ -135,7 +195,7 @@ export const ProgressCard: React.FC = () => {
                                 <div className="flex gap-2 w-full">
                                     <div className="w-full">
                                         <Select value={birthMonth} onValueChange={setBirthMonth}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white ">
+                                            <SelectTrigger className={`bg-[rgba(40,40,70,1)] border ${errors.birthDate ? 'border-red-500' : 'border-gray-700'} text-white`}>
                                                 <SelectValue placeholder="Month" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -150,7 +210,7 @@ export const ProgressCard: React.FC = () => {
 
                                     <div className="w-1/4">
                                         <Select value={birthDay} onValueChange={setBirthDay}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
+                                            <SelectTrigger className={`bg-[rgba(40,40,70,1)] border ${errors.birthDate ? 'border-red-500' : 'border-gray-700'} text-white`}>
                                                 <SelectValue placeholder="Day" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -163,7 +223,7 @@ export const ProgressCard: React.FC = () => {
 
                                     <div className="w-1/4">
                                         <Select value={birthYear} onValueChange={setBirthYear}>
-                                            <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
+                                            <SelectTrigger className={`bg-[rgba(40,40,70,1)] border ${errors.birthDate ? 'border-red-500' : 'border-gray-700'} text-white`}>
                                                 <SelectValue placeholder="Year" />
                                             </SelectTrigger>
                                             <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
@@ -175,30 +235,36 @@ export const ProgressCard: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+                            {errors.birthDate && (
+                                <p className="text-red-500 text-sm mt-1">{errors.birthDate}</p>
+                            )}
 
                             <div className="space-y-4 pt-2">
                                 <div className="flex gap-2">
-                                    <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
-                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
+                                    <Select value={birthHour} onValueChange={setBirthHour} disabled={exactTimeUnknown}>
+                                        <SelectTrigger className={`bg-[rgba(40,40,70,1)] border ${errors.birthTime ? 'border-red-500' : 'border-gray-700'} text-white`}>
                                             <SelectValue placeholder="00" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
                                             {hours.map((hour) => (
-                                                <SelectItem key={hour} value={hour}>{hour} </SelectItem>
+                                                <SelectItem key={hour} value={hour}>{hour}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <Select value={birthTime} onValueChange={setBirthTime} disabled={exactTimeUnknown}>
-                                        <SelectTrigger className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white">
-                                            <SelectValue placeholder="00 min" />
+                                    <Select value={birthMinute} onValueChange={setBirthMinute} disabled={exactTimeUnknown}>
+                                        <SelectTrigger className={`bg-[rgba(40,40,70,1)] border ${errors.birthTime ? 'border-red-500' : 'border-gray-700'} text-white`}>
+                                            <SelectValue placeholder="00" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-[rgba(40,40,70,1)] text-white border-[rgba(60,60,90,1)]">
                                             {minutes.map((min) => (
-                                                <SelectItem key={min} value={min}>{min} min</SelectItem>
+                                                <SelectItem key={min} value={min}>{min}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
+                                {errors.birthTime && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.birthTime}</p>
+                                )}
 
                                 <div className="flex items-center space-x-2 pl-7">
                                     <Checkbox
@@ -207,7 +273,10 @@ export const ProgressCard: React.FC = () => {
                                         className="border-gray-100"
                                         onCheckedChange={(checked) => {
                                             setExactTimeUnknown(checked === true);
-                                            if (checked) setBirthTime("");
+                                            if (checked) {
+                                                setBirthHour("");
+                                                setBirthMinute("");
+                                            }
                                         }}
                                     />
                                     <Label
@@ -217,8 +286,6 @@ export const ProgressCard: React.FC = () => {
                                         I don't know the exact time
                                     </Label>
                                 </div>
-
-
                             </div>
                         </div>
                     )}
@@ -228,17 +295,16 @@ export const ProgressCard: React.FC = () => {
                         <div className="space-y-6">
                             <div className="space-y-2">
                                 <h2 className="text-2xl font-medium leading-8 tracking-[0px] font-libre-bodoni">
-                                    Your place of birth
+                                    {question.title}
                                 </h2>
                                 <p className="text-sm leading-5 tracking-[0.25px] text-gray-300 font-playfair">
-                                    Knowing your exact birthplace will allow us recreate your unique
-                                    astrological blueprint
+                                    {question.description}
                                 </p>
                             </div>
                             <div className="flex justify-center pt-4">
                                 <img
-                                    src="/placebirthday.svg"
-                                    alt="Birth place illustration"
+                                    src={question.image}
+                                    alt={`${question.title} illustration`}
                                     className="h-24 object-contain"
                                 />
                             </div>
@@ -250,13 +316,21 @@ export const ProgressCard: React.FC = () => {
                                     <Input
                                         type="text"
                                         value={birthplace}
-                                        onChange={(e) => setBirthplace(e.target.value)}
-                                        placeholder="City, Country"
-                                        className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)] "
+                                        onChange={(e) => {
+                                            setBirthplace(e.target.value);
+                                            if (errors.birthplace) {
+                                                setErrors(prev => ({ ...prev, birthplace: "" }));
+                                            }
+                                        }}
+                                        placeholder={question.placeholder}
+                                        className={`bg-[rgba(40,40,70,1)] border ${errors.birthplace ? 'border-red-500' : 'border-gray-700'} text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]`}
                                         aria-label="Your birthplace"
                                     />
                                 </div>
 
+                                {errors.birthplace && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.birthplace}</p>
+                                )}
                                 <div className="relative">
                                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                                         <Mail size={20} />
@@ -264,19 +338,26 @@ export const ProgressCard: React.FC = () => {
                                     <Input
                                         type="email"
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                            if (errors.email) {
+                                                setErrors(prev => ({ ...prev, email: "" }));
+                                            }
+                                        }}
                                         placeholder="Email address"
-                                        className="bg-[rgba(40,40,70,1)] border border-gray-700 text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]"
+                                        className={`bg-[rgba(40,40,70,1)] border ${errors.email ? 'border-red-500' : 'border-gray-700'} text-white p-3 pl-10 rounded-lg focus:ring-2 focus:ring-[rgba(66,104,165,1)]`}
                                         aria-label="Your email"
                                     />
                                 </div>
+
+                                {errors.email && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                                )}
                             </div>
                         </div>
                     )}
-
                 </div>
                 <div className="p-6 pt-0 border-t border-[rgba(255,255,255,0.1)]">
-
                     <div className="flex justify-center items-center gap-4 mt-6">
                         {currentStep > 1 && (
                             <Button
@@ -291,16 +372,14 @@ export const ProgressCard: React.FC = () => {
 
                         <Button
                             onClick={handleNext}
-                            className={currentStep === 3 ? "bg-[#426CCCFA] rounded-full font-playfair" : "bg-[#65558F] rounded-full font-playfair"}
+                            className={currentStep === totalSteps ? "bg-[#426CCCFA] rounded-full font-playfair" : "bg-[#65558F] rounded-full font-playfair"}
                         >
-                            {currentStep === 3 ? "GENERATE" : "NEXT"}
-                            {currentStep !== 3 && <ArrowRight size={16} className="ml-1" />}
+                            {currentStep === totalSteps ? "GENERATE" : "NEXT"}
+                            {currentStep !== totalSteps && <ArrowRight size={16} className="ml-1" />}
                         </Button>
                     </div>
                 </div>
             </div>
-
-
         </div>
     );
 };

@@ -4,28 +4,20 @@ export const questions = [
     description: "Tell us your name or nickname, it's an essential part of personalizing your reading",
     placeholder: "Enter your name",
     type: "text",
-    image: "/img/name-card.jpg"
+    image: "/date.svg"
   },
   {
-    title: "When were you born?",
-    description: "Your birth date helps us understand your unique astrological profile",
-    placeholder: "MM/DD/YYYY",
+    title: "Your birth date",
+    description: "Your birthdate helps us determine your current stage in life and what the near future has in store for you",
+    placeholder: "Select your birth date",
     type: "date",
-    image: "/img/birth-date.jpg"
+    image: "/timebirthday.svg"
   },
   {
-    title: "What time were you born?",
-    description: "The time of birth is crucial for accurate astrological readings",
-    placeholder: "HH:MM",
-    type: "time",
-    image: "/img/birth-time.jpg"
-  },
-  {
-    title: "Where were you born?",
-    description: "Your birth location helps us calculate the exact positions of celestial bodies",
-    placeholder: "Select your birth place",
-    type: "select",
-    options: ["New York, USA", "London, UK", "Tokyo, Japan", "Other"],
-    image: "/img/birth-location.jpg"
+    title: "Your place of birth",
+    description: "Knowing your exact birthplace will allow us recreate your unique astrological blueprint",
+    placeholder: "City, Country",
+    type: "text",
+    image: "/placebirthday.svg"
   }
 ];

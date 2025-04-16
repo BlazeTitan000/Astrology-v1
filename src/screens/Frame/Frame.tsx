@@ -8,16 +8,62 @@ import { BirthChartSection } from "../../components/BirthChartSection/BirthChart
 import { ScrollToTopButton } from "../../components/ScrollToTopButton/ScrollToTopButton";
 import { useScrollAnimation } from "../../hooks/useScrollAnimation";
 import { questions } from "./questions";
+import "./Frame.css";
+import axios from "axios";
+
+interface BirthDetails {
+  name: string;
+  birthDate: string;
+  birthTime: string | null;
+  birthplace: string;
+  email: string;
+}
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+if (!API_URL) {
+  throw new Error('VITE_API_URL environment variable is not defined');
+}
 
 export const Frame = (): JSX.Element => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [birthDetails, setBirthDetails] = useState<BirthDetails>({
+    name: "",
+    birthDate: "",
+    birthTime: null,
+    birthplace: "",
+    email: ""
+  });
   const totalSteps = questions.length;
   const progressCardRef = useScrollAnimation();
   const blogRef = useScrollAnimation();
 
-  const handleNext = () => {
+  const handleNext = (details: Partial<BirthDetails>) => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1);
+      setBirthDetails(prev => ({ ...prev, ...details }));
+    } else {
+      // Handle form submission
+      const finalDetails = { ...birthDetails, ...details };
+
+      // Send data to backend
+      axios.post(`${API_URL}/backendApi/generate-astrology-report`, finalDetails)
+        .then((response: { data: any }) => {
+          // Handle successful response
+          console.log('Report generated successfully:', response.data);
+          // You might want to redirect to a success page or show a success message
+        })
+        .catch((error: any) => {
+          // Handle error
+          console.error('Error generating report:', error);
+          // You might want to show an error message to the user
+        });
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
     }
   };
 
@@ -27,9 +73,9 @@ export const Frame = (): JSX.Element => {
   };
 
   return (
-    <div className="flex flex-col items-start bg-[#502b92]">
-      <div className="relative w-full">
-        <div className="relative bg-[#0d0d1f]">
+    <div className="frame-container">
+      <div className="frame-wrapper">
+        <div className="frame-content">
           <Header />
           <HeroSection />
           <BirthChartSection onScrollToProgress={handleScrollToProgress} />
@@ -37,21 +83,22 @@ export const Frame = (): JSX.Element => {
           {/* Progress Card Section */}
           <section
             ref={progressCardRef}
-            className="w-full py-10 bg-[url(/main-1.png)] min-h-screen bg-cover bg-center flex items-center relative z-10"
+            className="progress-section"
             id='progress-card-section'
           >
-            <div className="w-full">
+            <div className="progress-content">
               <ProgressCard
-                currentStep={currentStep}
+                currentStep={currentStep + 1}
                 totalSteps={totalSteps}
                 question={questions[currentStep]}
                 onNext={handleNext}
+                onPrevious={handlePrevious}
               />
             </div>
           </section>
 
           {/* Blog Section */}
-          <section ref={blogRef} className="relative z-10">
+          <section ref={blogRef} className="blog-section">
             <BlogSection />
           </section>
 
