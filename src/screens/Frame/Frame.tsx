@@ -61,28 +61,27 @@ export const Frame = (): JSX.Element => {
       if (storedDetails) {
         const finalDetails = JSON.parse(storedDetails) as BirthDetails;
 
+        // Redirect to loading page first
+        navigate('/loading');
+
         // Send generate request
         axios.post(`${API_URL}/generate-astrology-report`, finalDetails)
           .then((response: { data: { pdfUrl: string } }) => {
             console.log('Report generated successfully:', response.data);
 
-            // Create a temporary link element to download the PDF
-            const link = document.createElement('a');
-            link.href = API_URL + response.data.pdfUrl;
-            link.target = '_blank'; // Open in new tab
-            link.download = 'astrology-report.pdf'; // Set the filename
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Save PDF URL to session storage
+            sessionStorage.setItem('pdfUrl', API_URL + response.data.pdfUrl);
 
-            // Clear stored details
+            // Clear birth details from session storage
             sessionStorage.removeItem('birthDetails');
-            // Redirect to success page or show success message
+
+            // Redirect to success page
             navigate('/success');
           })
           .catch((error: any) => {
             console.error('Error generating report:', error);
-            // Handle error
+            // Handle error by redirecting to error page
+            navigate('/error');
           });
       }
     }

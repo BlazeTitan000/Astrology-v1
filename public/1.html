@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<title>fish-border</title>
+</head>
+
+<!-- https://stackoverflow.com/questions/22422323/ -->
+<body onLoad="random();">
+
+<style type="text/css">
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+    }
+    html {
+        background-color: transparent;
+    }
+</style>
+
+<script>
+const FISH_COUNT = 150;
+const MAX_X = 1920;
+const MAX_Y = 1080;
+const X = 0;
+const Y = 1;
+const STROKE_W = 2;
+const FILL = 0;
+const STROKE = 1;
+
+const SCALES = [
+    [0.1, 0.1, "25px"],
+    [0.2, 0.1, "25px"],
+    [0.1, 0.2, "25px"],
+    [0.2, 0.2, "25px"]
+];
+
+const COLORS = [
+    ["rgb(110, 171, 189)", "rgb(90, 159, 180)"], // blue
+    ["rgb(139, 209, 198)", "rgb(88, 190, 172)"], // green
+    ["rgb(90, 151, 182)", "rgb(74, 137, 168)"], // blue 2
+    ["rgb(1, 101, 235)", "rgb(1, 84, 197)"], // blue 3
+    ["rgb(232, 96, 70)", "rgb(175, 46, 22)"] // red
+]
+
+let rndX = 0;
+let rndY = 0;
+let rndScaleX = 0;
+let rndScaleY = 0;
+let rndColor = "blue";
+
+const COMPLETE = 0;
+const BOTTOM = 1;
+const BOTTOM_INV = 2;
+const SINUS = 3;
+let distributeFunc = BOTTOM_INV;
+
+function getYFromX(xValue) {
+    return (Math.sin(xValue) + 1 * 0.5) * MAX_Y * 0.25;
+}
+
+function distribute() {
+    if (distributeFunc == SINUS) {
+        rndX = Math.floor(Math.random() * MAX_X);
+        rndY = Math.sin((rndX / 1920) * Math.PI * 2.0) * MAX_Y * 0.5 + MAX_Y * 0.5;
+        // rndY = Math.floor(Math.random() * getYFromX(rndX));
+    } else if (distributeFunc == BOTTOM) {
+        rndX = Math.floor(Math.random() * MAX_X);
+        rndY = (rndX / 80) * (rndX / 80);
+        rndY = Math.max(rndY, MAX_Y / 5.0);
+        rndY = MAX_Y - Math.floor(Math.random() * rndY);
+    } else if (distributeFunc == BOTTOM_INV) {
+        rndX = Math.floor(Math.random() * MAX_X);
+        rndY = (rndX / 80) * (rndX / 80);
+        rndY = Math.max(rndY, MAX_Y / 5.0);
+        rndY = Math.floor(Math.random() * (MAX_Y - rndY));
+    } else {
+        rndX = Math.floor(Math.random() * MAX_X);
+        rndY = Math.floor(Math.random() * MAX_Y);
+    }
+}
+
+function setUpFish(idx) {
+    distribute();
+    let rndS = Math.floor(Math.random() * SCALES.length);
+    rndScaleX = SCALES[rndS][X];
+    rndScaleY = SCALES[rndS][Y];
+    let rndC = Math.floor(Math.random() * COLORS.length);
+    let transformValue =
+        "translate(" + rndX + "," + rndY + ")" +
+        "scale("+ rndScaleX + "," + rndScaleY + ")";
+
+    let idxStr = "fish" + idx.toString();
+    let elem = document.getElementById(idxStr);
+    elem.style.fill = COLORS[rndC][FILL];
+    elem.style.stroke = COLORS[rndC][STROKE];
+    elem.style.strokeWidth = SCALES[rndS][STROKE_W];
+    elem.setAttribute("transform", transformValue);
+    elem.setAttribute("href", "#fish");
+}
+
+function random() {
+    for (let i = 0; i < FISH_COUNT; i++) {
+        // stackoverflow.com/questions/17520337/
+        // https://vanseodesign.com/web-design/svg-definition-reuse/
+        var node = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        node.id = "fish" + i.toString();
+        document.getElementById("mainSVG").appendChild(node);
+
+        setUpFish(i);
+    }
+
+}
+</script>
+
+<svg id="mainSVG" version="1.1" xmlns="http://www.w3.org/2000/svg"
+ width="1920.0px" height="1080.0px" viewBox="0 0 1920.000000 1080.000000"
+ preserveAspectRatio="xMidYMid meet">
+
+<defs>
+    <g id="fish">
+        <!-- Body -->
+        <path d=
+            "M10 -1
+            c100 200 500 200 600 0"/>
+        <path d=
+            "M10 1
+            c100 -200 500 -200 600 0"/>
+
+        <!-- Flosse -->
+        <path d=
+            "M610 0
+            q12.5 -25 100 -100
+            -20 100 0 200
+            -82.5 -75 -100 -100
+            "/>
+
+        <!-- Eye -->
+        <circle cx="126" cy="-30" r="20" fill="white" stroke-width="0px"/>
+    </g>
+</defs>
+
+</svg>
+
+</body>
+</html>

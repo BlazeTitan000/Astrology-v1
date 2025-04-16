@@ -1,33 +1,7 @@
 import React from 'react';
 import { Card, CardContent } from "../ui/card";
 import { useNavigate } from 'react-router-dom';
-
-const blogPosts = [
-  {
-    id: 1,
-    image: "/img.png",
-    title: "Understanding Mercury Retrograde",
-    description: "Discover how this celestial event affects communication and technology.",
-    category: "Planetary Movements",
-    date: "March 15, 2025"
-  },
-  {
-    id: 2,
-    image: "/img-1.png",
-    title: "Full Moon Rituals",
-    description: "Learn about powerful practices to harness lunar energy.",
-    category: "Lunar Cycles",
-    date: "March 12, 2025"
-  },
-  {
-    id: 3,
-    image: "/img-2.png",
-    title: "The 12 Houses Explained",
-    description: "Your complete guide to understanding astrological houses.",
-    category: "Astrology Basics",
-    date: "March 10, 2025"
-  }
-];
+import { blogPosts } from '../../data/blogContent';
 
 export const BlogSection = () => {
   const navigate = useNavigate();
@@ -55,7 +29,7 @@ export const BlogSection = () => {
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-48 object-cover"
+                  className="w-full object-cover"
                 />
                 <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full">
                   {post.category}

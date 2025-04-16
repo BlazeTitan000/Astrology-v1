@@ -3,9 +3,11 @@ import { Button } from "../ui/button";
 import animationData from '../../assets/animation/gradient.json';
 import Lottie from "lottie-react";
 import './HeroSection.css';
+import { useNavigate } from 'react-router-dom';
 
-export const HeroSection = () => {
+export const HeroSection: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,6 +59,13 @@ export const HeroSection = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  const handleGetStarted = () => {
+    const progressCardSection = document.getElementById('progress-card-section');
+    if (progressCardSection) {
+      progressCardSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative w-full lg:min-h-screen min-h-[90vh] overflow-hidden pt-[100px]">
       <div className="relative lg:min-h-screen min-h-[90vh]" ref={containerRef}>
@@ -80,16 +89,16 @@ export const HeroSection = () => {
               destiny through advanced astrological analysis
             </p>
 
-            <div className="mt-[30vh] lg:mt-[20vh] animate-float">
+            <p className="mt-4 text-2xl text-[#f6ba02] font-libre-bodoni animate-fade-in-delay">
+              Only $6.99
+            </p>
+
+            <div className="mt-[20vh] lg:mt-[10vh] hero-button-container">
               <Button
-                className="w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-6 bg-[#4268a5] rounded-full text-base sm:text-lg font-libre-bodoni hover:bg-[#355694] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(66,104,165,0.5)] group relative overflow-hidden"
-                onClick={() => {
-                  const section = document.getElementById("progress-card-section");
-                  section?.scrollIntoView({ behavior: "smooth" });
-                }}
+                className="hero-button"
+                onClick={handleGetStarted}
               >
                 <span className="relative z-10">Generate Your Birth Chart</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#4268a5] to-[#355694] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </Button>
             </div>
           </div>
