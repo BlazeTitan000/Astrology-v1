@@ -1,18 +1,25 @@
 .frame-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
     background-color: #502b92;
+    overflow-x: hidden;
 }
 
 .frame-wrapper {
     position: relative;
     width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .frame-content {
     position: relative;
+    width: 100%;
     background-color: #0d0d1f;
+    overflow-x: hidden;
 }
 
 .progress-section {
@@ -30,9 +37,11 @@
 
 .progress-content {
     width: 100%;
+    max-width: 100%;
 }
 
 .blog-section {
     position: relative;
     z-index: 10;
+    width: 100%;
 }
