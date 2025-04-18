@@ -28,7 +28,7 @@ jobs:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_STRIPE_PUBLIC_KEY: ${{ secrets.VITE_STRIPE_PUBLIC_KEY }}
 
-      - name: Deploy to Digital Ocean
+      - name: Deploy frontend to Digital Ocean
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -38,11 +38,24 @@ jobs:
           target: "/var/www/nextzodiac"
           strip_components: 0
 
-      - name: Restart Nginx
+      - name: Deploy API to Digital Ocean
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          source: "api/*"
+          target: "/var/www/nextzodiac-api"
+          strip_components: 0
+
+      - name: Install API dependencies and start services
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USERNAME }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
+            cd /var/www/nextzodiac-api
+            npm install
+            pm2 restart nextzodiac-api || pm2 start npm --name "nextzodiac-api" -- start
             sudo systemctl restart nginx 
