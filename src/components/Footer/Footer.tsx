@@ -1,13 +1,39 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import PlanetsGuideSection from '../PlanetGuide/PlanetsGuideSection';
 import { Divider } from '../Divider/Divider';
 
 export const Footer = () => {
+  const navigate = useNavigate();
+
+  const handlePolicyLinkClick = (path: string) => {
+    navigate(path);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
   return (
     <footer className="w-full py-2 bg-[#0a0a1a] pt-[5rem]">
       <PlanetsGuideSection />
       <Divider />
+      <div className="w-5/6 mx-auto flex justify-center gap-4 py-4">
+        <button
+          onClick={() => handlePolicyLinkClick('/terms')}
+          className="text-gray-400 hover:text-[#4268a5] transition-colors duration-300"
+        >
+          Terms of Use
+        </button>
+        <span className="text-gray-600">|</span>
+        <button
+          onClick={() => handlePolicyLinkClick('/privacy-policy')}
+          className="text-gray-400 hover:text-[#4268a5] transition-colors duration-300"
+        >
+          Privacy Policy
+        </button>
+      </div>
       <div className="w-5/6 mx-auto pt-8 min-h-[200px]">
         <div className="relative border-t border-gray-800">
           <div className='lg:w-1/2 lg:translate-x-full w-full'>

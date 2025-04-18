@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Frame } from './screens/Frame/Frame';
-import { TermsAndConditions } from './screens/TermsAndConditions/TermsAndConditions';
+import { TermsOfUse } from './screens/TermsOfUse/TermsOfUse';
+import { PrivacyPolicy } from './screens/PrivacyPolicy/PrivacyPolicy';
 import { ExampleReport } from './screens/ExampleReport/ExampleReport';
 import { BlogDetail } from './screens/BlogDetail/BlogDetail';
 import { Loading } from './screens/Loading/Loading';
@@ -14,7 +15,8 @@ function App() {
             <div className="min-h-screen bg-[#1C1C3A]">
                 <Routes>
                     <Route path="/" element={<Frame />} />
-                    <Route path="/terms" element={<TermsAndConditions />} />
+                    <Route path="/terms" element={<TermsOfUse />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/example-report" element={<ExampleReport />} />
                     <Route path="/blog/:id" element={<BlogDetail />} />
                     <Route path="/loading" element={<Loading />} />

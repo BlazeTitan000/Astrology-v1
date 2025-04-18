@@ -52,12 +52,6 @@ export const Header = () => {
             >
               <DropdownMenu.Item
                 className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white"
-                onClick={() => navigate('/terms')}
-              >
-                Terms & Conditions
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                className="text-sm px-4 py-2 outline-none cursor-pointer hover:text-purple-400 rounded-md text-white"
                 onClick={handleBlogClick}
               >
                 Blog
