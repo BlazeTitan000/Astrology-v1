@@ -84,12 +84,12 @@ export const HeroSection: React.FC = () => {
               Discover Your Cosmic Blueprint with AI- Powered Astrology
             </h1>
 
-            <p className="mt-6 sm:mt-8 md:mt-10 font-normal text-base sm:text-lg md:text-xl text-[#d0a933] leading-relaxed font-playfair animate-fade-in-delay">
+            <p className="mt-6 sm:mt-8 md:mt-10 font-normal text-base sm:text-lg md:text-xl text-[#d0a933] leading-relaxed font-playfair animate-fade-in-delay drop-shadow-[0_3px_4px_rgba(0,0,0,1)]">
               Unlock the secrets of your personality, life path, and
               destiny through advanced astrological analysis
             </p>
 
-            <p className="mt-4 text-2xl text-[#f6ba02] font-libre-bodoni animate-fade-in-delay">
+            <p className="mt-4 text-2xl text-[#f6ba02] font-libre-bodoni animate-fade-in-delay drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
               Only $6.99
             </p>
 
