@@ -100,8 +100,8 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ currentStep, totalSt
 
     return (
         <div className="bg-[rgba(0,0,0,0)] z-10 flex mt-[-34px] w-5/6 mx-auto flex-col items-center pt-[39px] max-md:max-w-full">
-            <div className="bg-[rgba(28,28,58,0.9)] min-w-[280px] mt-8 min-h-[550px] w-[560px] max-w-full overflow-hidden text-white font-normal rounded-[28px] max-md:mt-5 flex flex-col">
-                <div className="flex-1 overflow-y-auto p-6 max-md:max-w-full max-md:px-5">
+            <div className="bg-[rgba(28,28,58,0.9)] min-w-[280px] mt-8 min-h-[550px] w-[560px] max-w-full text-white font-normal rounded-[28px] max-md:mt-5 flex flex-col">
+                <div className="flex-1  p-6 max-md:max-w-full max-md:px-5">
                     <div className="flex w-[561px] max-w-full flex-col gap-1">
                         <div className="flex justify-between text-white text-xs mb-1">
                             <span className="font-semibold">Step {currentStep}</span>

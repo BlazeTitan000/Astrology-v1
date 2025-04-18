@@ -5,31 +5,31 @@ const PlanetsGuideSection: React.FC = () => {
     const guides = [
         {
             id: 1,
-            title: "Planets in your birth chart",
+            title: "🔭 Planets in your chart",
             description:
-                "These represent your core drives and energies.\nEach planet symbolizes a different aspect of\nyour psyche and life experience, from your\nidentity and emotions to your ambition and\ngrowth.",
-            icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/7afcb605f17b327e9e8e922d264ae2a038966388?placeholderIfAbsent=true",
+                "Each planet reflects a different part of your personality—like how you love, think, act, or grow. Together, they shape your inner world and what drives you.\n\nYour birth chart includes the sun, moon, and all major planets, each with a specific role.",
+            // icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/7afcb605f17b327e9e8e922d264ae2a038966388?placeholderIfAbsent=true",
         },
         {
             id: 2,
-            title: "Signs in your birth chart",
+            title: "🌌 Signs in your chart",
             description:
-                "The zodiac signs show the style and quality of expression for each planet. They reveal how you embody and express the planetary\nenergies in your unique way.",
-            icon: "/group.png",
+                "The zodiac signs give each planet its tone. They describe how you express your energy—bold, emotional, calm, curious—your unique style.\n\nThey show how you act, not what you do, adding color to every part of your chart.",
+            // icon: "/group.png",
         },
         {
             id: 3,
-            title: "Houses in your birth chart",
+            title: "🏠 Houses in your chart",
             description:
-                "The houses in your birth chart represent the\ndifferent areas of life where you focus your\nenergy and attention. They highlight the\nspecific arenas where your planetary energies and sign qualities play out.",
-            icon: "/group-1.png",
+                "Houses show where your energy flows: love, career, family, or creativity. They reveal which life areas matter most and where you seek meaning.\n\nEach house links to a specific area of life, like relationships, work, or personal growth.",
+            // icon: "/group-1.png",
         },
         {
             id: 4,
-            title: "Aspects formed in your birth chart",
+            title: "🌟 Aspects in your chart",
             description:
-                "Aspects are the relationships and interactions between the planets in your chart. They create patterns of harmony (supporting your natural talents) or challenge (indicating areas for growth and development).",
-            icon: "/group-2.png",
+                "Aspects are the connections between planets. They reveal your natural talents, inner conflicts, and potential for growth or balance.\n\nThey influence how easily your inner energies work together—or sometimes clash.",
+            // icon: "/group-2.png",
         },
     ];
 

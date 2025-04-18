@@ -1,51 +1,82 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Lottie from 'lottie-react';
-import writingAnimation from '../../assets/animation/writing-animation.json';
-import waitingAnimation from '../../assets/animation/waiting.json';
+import loadingAnimation from '../../assets/animation/waiting.json';
 import { Header } from '../../components/Header/Header';
 import { Footer } from '../../components/Footer/Footer';
 
-export const Loading: React.FC = () => {
+interface BirthDetails {
+    name: string;
+    birthDate: string;
+    birthTime: string | null;
+    birthplace: string;
+    email: string;
+    paymentIntentId: string;
+}
+
+export const Loading = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const generateReport = async () => {
+            try {
+                // Get the stored birth details
+                const storedDetails = sessionStorage.getItem('birthDetails');
+                if (!storedDetails) {
+                    navigate('/');
+                    return;
+                }
+
+                const birthDetails = JSON.parse(storedDetails) as BirthDetails;
+
+                // Generate the report
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-astrology-report`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(birthDetails),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to generate report');
+                }
+
+                const { pdfUrl } = await response.json();
+
+                // Save PDF URL to session storage
+                sessionStorage.setItem('pdfUrl', import.meta.env.VITE_API_URL + pdfUrl);
+
+                // Clear birth details from session storage
+                sessionStorage.removeItem('birthDetails');
+
+                // Navigate to success page
+                navigate('/success');
+            } catch (error) {
+                console.error('Error generating report:', error);
+                navigate('/error');
+            }
+        };
+
+        generateReport();
+    }, [navigate]);
+
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#1C1C3A] to-[#131325] text-white">
+        <div className="min-h-screen bg-[#1C1C3A] flex flex-col">
             <Header />
-
-            <main className="flex-grow flex items-center justify-center px-6 py-16">
-
-                <div className="w-full max-w-3xl text-center">
-                    <div className=" ">
+            <main className="flex-grow flex items-center justify-center p-4">
+                <div className="text-center">
+                    <div className="w-64 h-64 mx-auto mb-8">
+                        <Lottie animationData={loadingAnimation} loop />
                     </div>
-                    <div className="mb-8">
-                        <Lottie
-                            animationData={writingAnimation}
-                            loop
-                            className="w-48 h-48 mx-auto drop-shadow-xl"
-                        />
-                    </div>
-
-                    <h1 className="text-4xl lg:text-5xl font-libre-bodoni text-[#f6ba02] mb-4 leading-tight">
-                        Crafting Your Personalized Report
+                    <h1 className="text-2xl text-white font-libre-bodoni mb-4">
+                        Generating Your Astrology Report
                     </h1>
-
-                    <p className="text-lg lg:text-xl text-gray-300 font-playfair mb-10 max-w-2xl mx-auto leading-relaxed">
-                        We're diving deep into your birth chart details using advanced astrological algorithms.
-                        Sit tight — your report will be ready shortly.
-                    </p>
-
-                    <div className="flex justify-center">
-                        <Lottie
-                            animationData={waitingAnimation}
-                            loop
-                            className="w-28 h-28 opacity-80"
-                        />
-                    </div>
-
-                    <p className="mt-6 text-sm text-gray-500 italic">
-                        This usually takes less than a minute.
+                    <p className="text-gray-300">
+                        Please wait while we analyze your birth details...
                     </p>
                 </div>
             </main>
-
             <Footer />
         </div>
     );

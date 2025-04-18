@@ -8,6 +8,7 @@ import { BlogDetail } from './screens/BlogDetail/BlogDetail';
 import { Loading } from './screens/Loading/Loading';
 import { Error } from './screens/Error/Error';
 import { Success } from './screens/Success/Success';
+import { Checkout } from './screens/Checkout/Checkout';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
             <div className="min-h-screen bg-[#1C1C3A]">
                 <Routes>
                     <Route path="/" element={<Frame />} />
+                    <Route path="/checkout" element={<Checkout />} />
                     <Route path="/terms" element={<TermsOfUse />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/example-report" element={<ExampleReport />} />

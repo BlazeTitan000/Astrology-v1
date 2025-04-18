@@ -31,7 +31,7 @@ export const BlogSection = () => {
                   alt={post.title}
                   className="w-full object-cover"
                 />
-                <div className="absolute top-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full">
+                <div className="absolute bottom-4 left-4 bg-purple-600 text-white text-xs px-3 py-1 rounded-full">
                   {post.category}
                 </div>
               </div>

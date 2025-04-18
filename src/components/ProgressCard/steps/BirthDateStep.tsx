@@ -94,6 +94,7 @@ export const BirthDateStep: React.FC<StepProps> = ({ question, errors, onValueCh
                 <div className="flex items-center space-x-2">
                     <Checkbox
                         id="exactTimeUnknown"
+                        className="border-white"
                         checked={exactTimeUnknown}
                         onCheckedChange={(checked) => onValueChange('exactTimeUnknown', checked ? 'true' : 'false')}
                     />
