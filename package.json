@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "live": "pm2 start npm --name 'frontend' -- start "
+    "start": "vite preview",
+    "live": "pm2 start npm --name 'frontend' -- run start"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.5",
