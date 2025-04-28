@@ -88,10 +88,6 @@ export const HeroSection: React.FC = () => {
               Get a fully personalized astrology report based on your birth data, revealing your unique gifts, challenges and future path.
             </p>
 
-            <p className="mt-4 text-2xl text-[#f6ba02] font-libre-bodoni animate-fade-in-delay drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-              full report for only $6.99 (was $14.99)
-            </p>
-
             <div className="mt-[20vh] lg:mt-[10vh] hero-button-container">
               <Button
                 className="hero-button"
