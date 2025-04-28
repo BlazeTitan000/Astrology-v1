@@ -81,16 +81,15 @@ export const HeroSection: React.FC = () => {
         <div className="absolute w-5/6 mx-auto inset-x-0 top-1/2 -translate-y-1/2">
           <div className="relative w-full max-w-3xl">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-normal text-[#f6ba02] leading-tight font-libre-bodoni animate-fade-in">
-              Discover Your Cosmic Blueprint with AI- Powered Astrology
+              Your cosmic guide to purpose and potential
             </h1>
 
             <p className="mt-6 sm:mt-8 md:mt-10 font-normal text-base sm:text-lg md:text-xl text-[#d0a933] leading-relaxed font-playfair animate-fade-in-delay drop-shadow-[0_3px_4px_rgba(0,0,0,1)]">
-              Unlock the secrets of your personality, life path, and
-              destiny through advanced astrological analysis
+              Get a fully personalized astrology report based on your birth data, revealing your unique gifts, challenges and future path.
             </p>
 
             <p className="mt-4 text-2xl text-[#f6ba02] font-libre-bodoni animate-fade-in-delay drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-              Only $6.99
+              full report for only $6.99 (was $14.99)
             </p>
 
             <div className="mt-[20vh] lg:mt-[10vh] hero-button-container">

@@ -50,8 +50,10 @@ export const Frame = (): JSX.Element => {
       // Get the stored birth details from session storage
       const storedDetails = sessionStorage.getItem('birthDetails');
       if (storedDetails) {
-        // Navigate to loading page for report generation
-        navigate('/loading');
+        // Only navigate if we're not already on the loading page
+        if (location.pathname !== '/loading') {
+          navigate('/loading');
+        }
       }
     }
   }, [location, navigate]);

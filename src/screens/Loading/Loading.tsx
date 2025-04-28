@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import loadingAnimation from '../../assets/animation/waiting.json';
@@ -16,9 +16,18 @@ interface BirthDetails {
 
 export const Loading = () => {
     const navigate = useNavigate();
+    const requestMade = useRef(false);
+
+    useEffect(() => {
+        console.log('123123123')
+    })
 
     useEffect(() => {
         const generateReport = async () => {
+            // Prevent multiple requests
+            if (requestMade.current) return;
+            requestMade.current = true;
+
             try {
                 // Get the stored birth details
                 const storedDetails = sessionStorage.getItem('birthDetails');
@@ -28,14 +37,16 @@ export const Loading = () => {
                 }
 
                 const birthDetails = JSON.parse(storedDetails) as BirthDetails;
-
                 // Generate the report
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/generate-astrology-report`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(birthDetails),
+                    body: JSON.stringify({
+                        ...birthDetails,
+                        paymentIntentId: birthDetails.paymentIntentId
+                    }),
                 });
 
                 if (!response.ok) {
@@ -59,7 +70,7 @@ export const Loading = () => {
         };
 
         generateReport();
-    }, [navigate]);
+    }, []); // Empty dependency array since we're using refs
 
     return (
         <div className="min-h-screen bg-[#1C1C3A] flex flex-col">

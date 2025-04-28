@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 export const Error: React.FC = () => {
     const navigate = useNavigate();
 
+    const storedDetails = sessionStorage.getItem('birthDetails');
+    console.log('storedDetails...........................', storedDetails);
     return (
         <div className="min-h-screen bg-[#1C1C3A]">
             <Header />
