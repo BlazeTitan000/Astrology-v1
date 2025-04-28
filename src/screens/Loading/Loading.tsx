@@ -28,7 +28,7 @@ export const Loading = () => {
                 // Get the stored birth details
                 const storedDetails = sessionStorage.getItem('birthDetails');
                 if (!storedDetails) {
-                    // navigate('/');
+                    navigate('/');
                     return;
                 }
 
