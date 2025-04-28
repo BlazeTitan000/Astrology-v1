@@ -11,7 +11,7 @@ export const Error: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#1C1C3A]">
             <Header />
-            <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
+            <div className="flex flex-col items-center justify-center min-h-[100vh] px-4  lg:translate-y-10 translate-y-15 py-8 mb-4">
                 <div className="max-w-md w-full text-center">
                     <div className="mb-8">
                         <div className="text-[#f6ba02] text-6xl mb-4">⚠️</div>

@@ -19,10 +19,6 @@ export const Loading = () => {
     const requestMade = useRef(false);
 
     useEffect(() => {
-        console.log('123123123')
-    })
-
-    useEffect(() => {
         const generateReport = async () => {
             // Prevent multiple requests
             if (requestMade.current) return;
@@ -32,7 +28,7 @@ export const Loading = () => {
                 // Get the stored birth details
                 const storedDetails = sessionStorage.getItem('birthDetails');
                 if (!storedDetails) {
-                    navigate('/');
+                    // navigate('/');
                     return;
                 }
 
@@ -73,10 +69,10 @@ export const Loading = () => {
     }, []); // Empty dependency array since we're using refs
 
     return (
-        <div className="min-h-screen bg-[#1C1C3A] flex flex-col">
+        <div className="min-h-screen bg-[#1C1C3A]">
             <Header />
-            <main className="flex-grow flex items-center justify-center p-4">
-                <div className="text-center">
+            <div className="flex flex-col items-center justify-center min-h-[100vh] px-4  lg:translate-y-10 translate-y-15 py-8 mb-4">
+                <div className="max-w-md w-full text-center">
                     <div className="w-64 h-64 mx-auto mb-8">
                         <Lottie animationData={loadingAnimation} loop />
                     </div>
@@ -87,7 +83,7 @@ export const Loading = () => {
                         Please wait while we analyze your birth details...
                     </p>
                 </div>
-            </main>
+            </div>
             <Footer />
         </div>
     );
