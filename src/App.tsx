@@ -25,7 +25,7 @@ function App() {
           <Route path="/loading" element={<Loading />} />
           <Route path="/error" element={<Error />} />
           <Route path="/success" element={<Success />} />
-          <Route path="/admin/redeem" element={<AdminRedeemPage />} />
+          <Route path="/admin-redeem" element={<AdminRedeemPage />} />
         </Routes>
       </div>
     </Router>
