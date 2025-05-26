@@ -5,6 +5,8 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate } from "react-router-dom";
 import "./CustomCheckout.css";
@@ -25,6 +27,8 @@ interface CheckoutFormProps {
   birthDetails: BirthDetails;
   clientSecret: string;
   paymentIntentId: string | null;
+  discountedPrice: number; // Add discountedPrice
+  setDiscountedPrice: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({
@@ -34,12 +38,47 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   birthDetails,
   clientSecret,
   paymentIntentId,
+  discountedPrice,
+  setDiscountedPrice,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [redeemCode, setRedeemCode] = useState("");
+  const [isRedeemCodeValid, setIsRedeemCodeValid] = useState(false);
+  const [redeemMessage, setRedeemMessage] = useState("");
+
+  const handleRedeemCode = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/validate-redeem-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code: redeemCode }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsRedeemCodeValid(true);
+        setDiscountedPrice(3.5); // Apply 50% discount
+        setRedeemMessage("Redeem code applied successfully!");
+      } else {
+        setDiscountedPrice(6.99); // Apply 50% discount
+        setIsRedeemCodeValid(false);
+        setRedeemMessage("Invalid redeem code.");
+      }
+    } catch (err) {
+      console.error("Error validating redeem code:", err);
+      setRedeemMessage("An error occurred. Please try again.");
+    }
+  };
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setIsProcessing(true);
@@ -95,7 +134,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   };
 
   return (
-    <div className="checkout-container flex flex-row items-start gap-8 translate-y-[100px] mb-20 pb-20">
+    <div className="checkout-container flex lg:flex-row flex-col justify-center items-center gap-8 translate-y-[100px] mb-20 pb-20">
       <div className="checkout-card">
         <div className="checkout-header">
           <h2>Complete Your Order</h2>
@@ -115,6 +154,31 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </div>
 
           {errorMessage && <div className="error-message">{errorMessage}</div>}
+          <div className="my-6">
+            <PayPalScriptProvider
+              options={{
+                clientId:
+                  "AbVQJjaB1MLHwyRS9Nq83N2eOY8jb0rzn97jilrMgTmIkO8MG1vfl6BZaoPhVrzu7WU2ZhbvQwuZNXsd",
+              }}
+            >
+              <PayPalButtons
+                style={{ layout: "horizontal" }}
+                createOrder={(data, actions) =>
+                  actions.order.create({
+                    intent: "CAPTURE",
+                    purchase_units: [
+                      { amount: { value: "6.99", currency_code: "USD" } },
+                    ],
+                  })
+                }
+                onApprove={async (data, actions) => {
+                  await actions.order?.capture();
+                  onSuccess();
+                }}
+                onError={() => alert("PayPal payment failed")}
+              />
+            </PayPalScriptProvider>
+          </div>
 
           <button
             type="submit"
@@ -147,7 +211,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       </div>
       <div className="checkout-card">
         <div className="order-summary">
-          <h3>SHIPS TODAY</h3>
+          <h3>Receive your report right away after payment</h3>
 
           <div className="summary-item">
             <img src="/sample.png" alt="book" className="w-48 mx-auto" />
@@ -162,25 +226,40 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           </div>
           <div className="summary-item text-3xl font-bold">
             <span>Today's Total</span>
-            <span className="savings-amount">$6.99</span>
+            <span className="savings-amount">
+              ${discountedPrice.toFixed(2)}
+            </span>
           </div>
         </div>
-
         <div className="order-summary">
-          <h3>Order Summary</h3>
-
+          <h3>Discount code? Enter here</h3>
           <div className="summary-item mb-8">
             <input
               type="text"
               placeholder="Coupon Code"
-              className="px-4 py-2 rounded-lg w-full"
+              value={redeemCode}
+              onChange={(e) => setRedeemCode(e.target.value)}
+              className="px-4 py-2 rounded-lg w-full text-gray-900"
             />
           </div>
           <div className="summary-item flex justify-center">
-            <button className="px-4 py-2 bg-gray-600 rounded-lg w-1/2">
+            <button
+              type="button"
+              onClick={handleRedeemCode}
+              className="px-4 py-2 bg-gray-600 rounded-lg w-1/2"
+            >
               Apply
             </button>
           </div>
+          {redeemMessage && (
+            <div
+              className={`mt-2 ${
+                isRedeemCodeValid ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {redeemMessage}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -197,6 +276,7 @@ export const CustomCheckout: React.FC<CheckoutFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [discountedPrice, setDiscountedPrice] = useState(6.99);
   const paymentIntentCreated = useRef(false);
 
   useEffect(() => {
@@ -217,7 +297,7 @@ export const CustomCheckout: React.FC<CheckoutFormProps> = ({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              amount: 699, // $6.99 in cents
+              amount: Math.round(discountedPrice * 100), // $6.99 in cents
               currency: "usd",
               email,
               metadata: {
@@ -283,7 +363,7 @@ export const CustomCheckout: React.FC<CheckoutFormProps> = ({
   const options = {
     mode: "payment",
     currency: "usd",
-    amount: 699,
+    amount: Math.round(discountedPrice * 100),
   } as const;
 
   return (
@@ -295,6 +375,8 @@ export const CustomCheckout: React.FC<CheckoutFormProps> = ({
         onCancel={onCancel}
         clientSecret={clientSecret!}
         paymentIntentId={paymentIntentId}
+        discountedPrice={discountedPrice} // Pass discountedPrice as a prop
+        setDiscountedPrice={setDiscountedPrice}
       />
     </Elements>
   );
