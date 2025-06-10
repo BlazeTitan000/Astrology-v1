@@ -49,6 +49,21 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
   const [redeemCode, setRedeemCode] = useState("");
   const [isRedeemCodeValid, setIsRedeemCodeValid] = useState(false);
   const [redeemMessage, setRedeemMessage] = useState("");
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const reportImages = [
+    "/sample1.png",
+    "/sample2.png",
+    "/sample3.png",
+    // Add more image paths as needed
+  ];
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const prevPage = () =>
+    setCurrentPage((prev) => (prev === 0 ? reportImages.length - 1 : prev - 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => (prev === reportImages.length - 1 ? 0 : prev + 1));
 
   const handleRedeemCode = async () => {
     try {
@@ -132,6 +147,18 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
       setIsProcessing(false);
     }
   };
+  const paypalSubmit = async () => {
+    setIsProcessing(true);
+
+    const dataToSave = {
+      ...birthDetails,
+      email,
+    };
+    console.log("Saving to sessionStorage before payment:", dataToSave);
+    sessionStorage.setItem("birthDetails", JSON.stringify(dataToSave));
+
+    // ${window.location.origin}/loading
+  };
 
   return (
     <div className="checkout-container flex lg:flex-row flex-col justify-center items-center gap-8 translate-y-[100px] mb-20 pb-20">
@@ -173,7 +200,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
                 }
                 onApprove={async (data, actions) => {
                   await actions.order?.capture();
-                  onSuccess();
+                  paypalSubmit();
                 }}
                 onError={() => alert("PayPal payment failed")}
               />
@@ -213,9 +240,39 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
         <div className="order-summary">
           <h3>Receive your report right away after payment</h3>
 
-          <div className="summary-item">
-            <img src="/sample.png" alt="book" className="w-48 mx-auto" />
+          <div className="summary-item flex flex-col items-center">
+            <div className="relative w-64">
+              <img
+                src={reportImages[currentPage]}
+                alt={`Report page ${currentPage + 1}`}
+                className="w-48 mx-auto rounded cursor-zoom-in"
+                onClick={() => {
+                  setPreviewImage(reportImages[currentPage]);
+                  setPreviewOpen(true);
+                }}
+              />
+              <button
+                type="button"
+                onClick={prevPage}
+                className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-700 bg-opacity-70 text-white px-2 py-1 rounded-l"
+                aria-label="Previous page"
+              >
+                &#8592;
+              </button>
+              <button
+                type="button"
+                onClick={nextPage}
+                className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-700 bg-opacity-70 text-white px-2 py-1 rounded-r"
+                aria-label="Next page"
+              >
+                &#8594;
+              </button>
+            </div>
+            <div className="mt-2 text-sm text-gray-400">
+              Page {currentPage + 1} of {reportImages.length}
+            </div>
           </div>
+
           <div className="summary-item">
             <span>SUBTOTAL</span>
             <span>$14.99</span>
@@ -262,6 +319,26 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({
           )}
         </div>
       </div>
+      {previewOpen && previewImage && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-80"
+          onClick={() => setPreviewOpen(false)}
+        >
+          <img
+            src={previewImage}
+            alt="Preview"
+            className="max-w-[90vw] max-h-[90vh] rounded shadow-2xl cursor-zoom-out transition-transform duration-200 hover:scale-105"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking the image itself
+          />
+          <button
+            className="absolute top-8 right-8 text-white text-3xl"
+            onClick={() => setPreviewOpen(false)}
+            aria-label="Close preview"
+          >
+            &times;
+          </button>
+        </div>
+      )}
     </div>
   );
 };
